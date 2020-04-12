@@ -1,0 +1,37 @@
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+var WIDTH: float :: 1600.0
+var HEIGHT: float :: 900.0
+func main()
+	do @wndMain :: wnd@makeWnd(null, %aspect, @WIDTH $ int, @HEIGHT $ int, "Title")
+	do @drawMain :: wnd@makeDraw(@wndMain, 0, 0, 1600, 900, %scale, %scale, false)
+	var graph: @Graph :: #@Graph
+	do graph.mainloop()
+end func
+
+class Graph()
+	var t: float
+	+func f1(x: float): float
+		ret lib@sin(x / 100.0) * 100.0
+	end func
+	+func f2(x: float): float
+		ret lib@e ^ (-x ^ 2.0 / (2.0 * 50.0 ^ 2.0)) * 300.0
+	end func
+	+func draw()
+		for X(0, @WIDTH $ int, 10)
+			var x: float :: X $ float
+			var y: float :: 0.0
+			for i(0, 3)
+				do y :+ me.f2(x - i $ float * @WIDTH / 3.0)
+			end for
+			do draw2d@circle(x $ float, y + @HEIGHT / 2.0, 5.0, 5.0, 0xFFFFFFFF)
+		end for
+	end func
+	
+	+func mainloop()
+		while(wnd@act())
+			do me.draw()
+			do draw@render(60)
+		end while
+	end func
+end class
